@@ -74,8 +74,8 @@ module JRPC
     def receive_response(timeout)
       timeout ||= @transport.read_timeout
       length = get_msg_length(timeout)
-      response = ''
-      @transport.read(length+1, response, timeout)
+      # NOTICE: ("nil" and "-1") -> hotfix for yeti-web
+      response = @transport.read(length+1, nil, -1)
       raise ClientError.new('invalid response. missed comma as terminator') if response[-1] != ','
       response.chomp(',')
     rescue ::SocketError
